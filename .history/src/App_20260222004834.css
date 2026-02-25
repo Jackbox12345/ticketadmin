@@ -1,0 +1,44 @@
+/* src/styles/globals.css */
+@import "tailwindcss";
+
+/* ===== Root Color Scheme ===== */
+:root {
+  /* Base */
+  --color-bg: #1e1b3a;
+  --color-surface: #26224f;
+  --color-card: #2d2960;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a5b4fc;
+
+  /* Brand / Accent */
+  --color-primary: #6366f1;     /* Indigo */
+  --color-accent: #22d3ee;      /* Cyan */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Muted / Borders */
+  --color-border: #3b376a;
+  --color-muted: #4c488a;
+}
+
+/* Optional dark override (if you toggle .dark on <html>) */
+.dark {
+  --color-bg: #14122b;
+  --color-surface: #1c1a3a;
+  --color-card: #23204a;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #c7d2fe;
+
+  --color-border: #2e2a5e;
+  --color-muted: #3a3675;
+}
+
+/* Example usage */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Base (Light Mode Default) ---------- */
+:root {
+  /* === Primitive Palette (raw colors) === */
+  --indigo-500: #6366f1;
+  --cyan-400: #22d3ee;
+  --green-500: #22c55e;
+  --amber-500: #f59e0b;
+  --red-500: #ef4444;
+
+  --slate-950: #0f172a;
+  --slate-900: #1e1b3a;
+  --slate-800: #26224f;
+  --slate-700: #2d2960;
+  --slate-600: #3b376a;
+  --slate-400: #94a3b8;
+  --white: #ffffff;
+
+  /* === Semantic Tokens (used in UI) === */
+  --bg: var(--slate-900);
+  --bg-surface: var(--slate-800);
+  --bg-card: var(--slate-700);
+
+  --text-primary: var(--white);
+  --text-secondary: var(--slate-400);
+
+  --border: var(--slate-600);
+
+  --primary: var(--indigo-500);
+  --accent: var(--cyan-400);
+
+  --success: var(--green-500);
+  --warning: var(--amber-500);
+  --danger: var(--red-500);
+}
+
+/* ---------- Dark Mode Override ---------- */
+.dark {
+  --bg: #0b0a1f;
+  --bg-surface: #14122b;
+  --bg-card: #1c1a3a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #c7d2fe;
+
+  --border: #2e2a5e;
+}
