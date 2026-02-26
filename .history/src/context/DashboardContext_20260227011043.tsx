@@ -119,7 +119,6 @@ export function DashboardProvider({
 
   const interval = setInterval(() => {
     loadDashboard();
-    console.log("Dashboard Reloading")
   }, 10000);
 
   return () => clearInterval(interval);

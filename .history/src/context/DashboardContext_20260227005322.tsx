@@ -114,16 +114,9 @@ export function DashboardProvider({
     }
   }
 
- useEffect(() => {
-  loadDashboard();
-
-  const interval = setInterval(() => {
+  useEffect(() => {
     loadDashboard();
-    console.log("Dashboard Reloading")
-  }, 10000);
-
-  return () => clearInterval(interval);
-}, []);
+  }, []);
 
   return (
     <DashboardContext.Provider

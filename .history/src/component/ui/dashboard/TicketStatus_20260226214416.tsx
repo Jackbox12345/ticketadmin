@@ -23,9 +23,8 @@ export default function TicketStatus() {
       </h3>
 
       {[
-        { label: "Open", value: ticketStatus.openCount },
-        { label: "Closed", value: ticketStatus.resolveCount },
-        { label: "Pending", value: ticketStatus.pendingCount }
+        { label: "Open", value: ticketStatus.open },
+        { label: "Closed", value: ticketStatus.closed },
       ].map((item) => (
         <div key={item.label}>
           <div className="flex justify-between text-sm mb-1">

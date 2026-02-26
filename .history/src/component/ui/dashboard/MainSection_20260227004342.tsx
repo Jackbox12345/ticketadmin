@@ -71,7 +71,7 @@ const MainSection = () => {
       <div className="grid grid-cols-4 gap-6">
 
         {/* TODAY PANEL */}
-        <TicketStatusToday/>
+       <TicketStatusToday/>
 
         {/* TICKET VOLUME */}
         <Card className="rounded-xl p-6 col-span-2 h-full">
