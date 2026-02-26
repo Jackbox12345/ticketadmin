@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -7,172 +8,107 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { useEffect, useState } from "react";
-import type { Range } from "../../../../misc/types";
-
-interface TicketChartProps {
-  range: Range;
+import{RechartsDevtools}  from '@recharts/devtools';
+interface Props {
+  range: "daily" | "weekly" | "monthly" | "yearly";
 }
 
-export default function TicketChart({ range }: TicketChartProps) {
-  const [weeklyData, setWeeklyData] = useState<any[]>([]);
-  const [monthlyData, setMonthlyData] = useState<any[]>([]);
-  const [dailyData, setDailyData] = useState<any[]>([]);
-  const [yearlyData, setYearlyData] = useState<any[]>([]);
+export default function TicketChart({ range }: Props) {
+  const [data, setData] = useState<any[]>([]);
 
-  // =========================
-  // FETCH WEEKLY
-  // =========================
-  useEffect(() => {
-    if (range === "weekly") {
-      fetch("http://localhost:3010/api/getTicketweeklyData")
-        .then((res) => res.json())
-        .then((data) => {
-          const formatted = data.map((item: any) => ({
-            label: item.DayName.slice(0, 3),
-            tickets: item.TotalRequests,
-            dayNumber: item.DayNumber,
-          }));
-
-          formatted.sort((a: any, b: any) => a.dayNumber - b.dayNumber);
-          setWeeklyData(formatted);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [range]);
-
-  // =========================
-  // FETCH MONTHLY
-  // =========================
-  useEffect(() => {
-    if (range === "monthly") {
-      fetch("http://localhost:3010/api/getmonthlyData")
-        .then((res) => res.json())
-        .then((data) => {
-          const weeks = [1, 2, 3, 4, 5];
-
-          const formatted = weeks.map((week) => {
-            const found = data.find(
-              (item: any) => item.WeekOfMonth === week
-            );
-
-            return {
-              label: `Week ${week}`,
-              tickets: found ? found.TotalRequests : 0,
-              weekNumber: week,
-            };
-          });
-
-          setMonthlyData(formatted);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [range]);
-
-  // =========================
-  // FETCH DAILY (LAST 24 HOURS)
-  // =========================
-  useEffect(() => {
-    if (range === "daily") {
-      fetch("http://localhost:3010/api/getdailyData")
-        .then((res) => res.json())
-        .then((data) => {
-          const hours = Array.from({ length: 24 }, (_, i) => i);
-
-          const formatted = hours.map((hour) => {
-            const found = data.find(
-              (item: any) =>
-                new Date(item.HourBucket).getHours() === hour
-            );
-
-            const label =
-              hour === 0
-                ? "12am"
-                : hour < 12
-                ? `${hour}am`
-                : hour === 12
-                ? "12pm"
-                : `${hour - 12}pm`;
-
-            return {
-              label,
-              tickets: found ? found.TotalRequests : 0,
-              hourNumber: hour,
-            };
-          });
-
-          setDailyData(formatted);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [range]);
-
-  // =========================
-  // FETCH YEARLY
-  // =========================
-  useEffect(() => {
-    if (range === "yearly") {
-      fetch("http://localhost:3010/api/getyearlyData")
-        .then((res) => res.json())
-        .then((data) => {
-          const months = [
-            "Jan","Feb","Mar","Apr","May","Jun",
-            "Jul","Aug","Sep","Oct","Nov","Dec"
-          ];
-
-          const formatted = months.map((month, index) => {
-            const found = data.find(
-              (item: any) => item.MonthNumber === index + 1
-            );
-
-            return {
-              label: month,
-              tickets: found ? found.TotalRequests : 0,
-              monthNumber: index + 1,
-            };
-          });
-
-          setYearlyData(formatted);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [range]);
-
-  // =========================
-  // DATA MAPPING
-  // =========================
-  const dataMap: any = {
-    weekly: weeklyData,
-    monthly: monthlyData,
-    daily: dailyData,
-    yearly: yearlyData,
+  const endpointMap: Record<string, string> = {
+    daily: "getdailyData",
+    weekly: "getTicketweeklyData",
+    monthly: "getmonthlyData",
+    yearly: "getyearlyData",
   };
 
-  const data = dataMap[range] || [];
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3010/api/${endpointMap[range]}`
+      );
+      const result = await res.json();
+
+      let formatted: any[] = [];
+
+      if (range === "weekly") {
+        formatted = result.map((item: any) => ({
+          label: item.DayName.slice(0, 3),
+          value: item.TotalRequests,
+        }));
+      }
+
+      if (range === "daily") {
+        formatted = result.map((item: any) => {
+          const label = new Date(item.HourBucket).toLocaleString("en-US", {
+            hour: "numeric",
+            hour12: true,
+            timeZone: "Asia/Manila",
+          }).replace(" ", "");
+
+          return {
+            label,
+            value: item.TotalRequests,
+          };
+        });
+      }
+
+      if (range === "monthly") {
+        formatted = result.map((item: any) => {
+          const date = new Date(item.WeekEnding);
+
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+
+          return {
+            label: `WE ${month}-${day}`,
+            value: item.TotalRequests,
+          };
+        });
+      }
+
+      if (range === "yearly") {
+        const monthNames = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
+        formatted = result.map((item: any) => ({
+          label: `${monthNames[item.MonthNumber - 1]} ${item.YearNumber}`,
+          value: item.TotalRequests,
+        }));
+      }
+
+      setData(formatted);
+    } catch (err) {
+      console.error("Chart error:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, [range]);
 
   return (
-    <div className="w-full h-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={data}
-          margin={{ top: 25, right: 30, left: 20, bottom: 20 }}
-        >
-          <CartesianGrid
-            stroke="var(--border)"
-            strokeDasharray="3 3"
-          />
-          <XAxis dataKey="label" stroke="var(--text-secondary)" />
-          <YAxis stroke="var(--text-secondary)" />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="tickets"
-            stroke="var(--primary)"
-            strokeWidth={3}
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={260}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#836ec9" />
+        <XAxis dataKey="label" stroke="#aaa" />
+        <YAxis  stroke="#aaa" />
+        <Tooltip />
+        <Line
+          type="monotone"
+          dataKey="value"
+          stroke="#19baf4"
+          strokeWidth={3}
+          dot={false}
+        />
+        <RechartsDevtools />
+      </LineChart>
+
+    </ResponsiveContainer>
   );
 }

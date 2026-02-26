@@ -17,7 +17,7 @@ interface CardProps {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "bg-[var(--bg-card)] border border-[var(--border)]",
+  default: "bg-[#6963b55b] border border-[var(--border)]",
   surface: "bg-[var(--bg-surface)] border border-[var(--border)]",
   outline: "bg-transparent border border-[var(--border)]",
 };

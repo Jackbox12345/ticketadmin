@@ -1,25 +1,24 @@
-import { useState, useEffect } from "react";
-import Card from "../Cards";
+import { useEffect, useState } from "react";
 
 interface TicketStatus {
   openCount: number;
   resolveCount: number;
   pendingCount: number;
+  // totalCount: number;
 }
 
-const TicketStatus = () => {
-  const [ticketStatus, setTicketStatus] = useState<TicketStatus | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function TicketStatus() {
+  const [data, setData] = useState<TicketStatus | null>(null);
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:3010/api/getTicketStatus");
-      const data = await res.json();
-      setTicketStatus(data);
+      const res = await fetch(
+        "http://localhost:3010/api/getTicketStatus"
+      );
+      const result = await res.json();
+      setData(result);
     } catch (err) {
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
   };
 
@@ -29,35 +28,40 @@ const TicketStatus = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (!data) return <div>Loading...</div>;
+
+  const total =
+    data.openCount + data.resolveCount + data.pendingCount;
+
+  const percent = (value: number) =>
+    total === 0 ? 0 : (value / total) * 100;
+
   return (
-    <Card className="row-span-2 flex flex-col justify-between">
-      <h3 className="text-xl text-[var(--text-secondary)]">
-        Tickets by status
+    <div className="space-y-6 px-3">
+      <h3 className="text-xl text-white font-bold mb-6">
+        Tickets by Status this Month
       </h3>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-16 space-x-2">
-          <div className="w-2.5 h-2.5 bg-[var(--primary)] rounded-full animate-bounce" />
-          <div className="w-2.5 h-2.5 bg-[var(--primary)] rounded-full animate-bounce [animation-delay:-0.2s]" />
-          <div className="w-2.5 h-2.5 bg-[var(--primary)] rounded-full animate-bounce [animation-delay:-0.4s]" />
-        </div>
-      ) : ticketStatus ? (
-        <div className="space-y-2 flex justify-between flex-col gap-5" >
-          <p className="text-lg font-semibold flex justify-between flex-row">
-            <span>Open</span> {ticketStatus.openCount} 
-          </p>
-          <p className="text-lg font-semibold flex justify-between flex-row">
-             <span>Resolve</span> {ticketStatus.resolveCount} 
-          </p>
-          <p className="text-lg font-semibold flex justify-between flex-row mb-6">
-             <span>Pending</span> {ticketStatus.pendingCount} 
-          </p>
-        </div>
-      ) : (
-        <p>No data</p>
-      )}
-    </Card>
-  );
-};
+      {[
+        { label: "Open", value: data.openCount },
+        { label: "Resolved", value: data.resolveCount },
+        { label: "Pending", value: data.pendingCount },
+        // { label: "Total tickets this month", value: data.totalCount },
+      ].map((item) => (
+        <div key={item.label}>
+          <div className="flex justify-between text-sm mb-1">
+            <span>{item.label}</span>
+            <span>{item.value}</span>
+          </div>
 
-export default TicketStatus;
+          <div className="w-full bg-[#2d2157] rounded-lg h-2">
+            <div
+              className="bg-[var(--primary)] h-2 rounded-lg transition-all duration-500"
+              style={{ width: `${percent(item.value)}%` }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

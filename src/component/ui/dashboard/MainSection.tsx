@@ -1,89 +1,133 @@
-
-import Card from '../Cards';
-import TicketChart from './charts/TicketChart';
-import ChartHeader from './ChartHeader';
-import { useState } from 'react';
-// import type { Range } from "../../../misc/types";
-
-import TopScorer from './TopScorer';
-import TicketStatus from './TicketStatus';
-
+import Card from "../Cards";
+import TicketChart from "./charts/TicketChart";
+import TopScorer from "./TopScorer";
+import TicketStatus from "./TicketStatus";
+import { useState } from "react";
+import ChartHeader from "./ChartHeader";
 
 const options = ["daily","weekly", "monthly", "yearly"] as const;
 type Range = (typeof options)[number];
 
 const MainSection = () => {
-    const [range, setRange] = useState<Range>("weekly");
-   const [messages, setMessages] = useState<string[]>([]);
-
-
+  const [range, setRange] = useState<Range>("daily");
+  
 
 
   return (
-    <>
-    {/* Main */}
-      <main className="flex-1 p-8 space-y-8 w-full"  >
+    <main className="flex-1 bg-[#1b1433] text-white p-6 space-y-6">
 
-        {/* Top Stats */}
-        <div className="grid grid-cols-4 gap-6 auto-rows-[120px]">
+      {/* ================= TOP ROW ================= */}
+      <div className="grid grid-cols-4 gap-6">
 
-            <Card className="row-span-2 flex flex-col justify-between">
-                {/* <h3 className="text-sm text-[var(--text-secondary)]">
-                CSAT this month
-                </h3>
-                <p className="text-4xl font-bold">95%</p>
-                 */}
-            </Card>
-            {/*top scorer*/}
-            
-            <TopScorer/>
-            
-            <TicketStatus/>
+        {/* CSAT */}
+        <Card className="rounded-xl p-6 flex flex-col justify-between h-full">
+          <h3 className="text-sm text-gray-400">CSAT this month</h3>
 
-            <Card className="row-span-2 flex flex-col justify-between">
-                {/* <h3 className="text-sm text-[var(--text-secondary)]">
-                QA this week
-                </h3>
-                <p className="text-4xl font-bold">88%</p> */}
-            </Card>
+          <div className="flex items-center justify-center flex-1">
+            <span className="text-4xl font-bold">95%</span>
+          </div>
 
-        </div>
-
-        {/* Middle Section */}
-        <div className="grid grid-cols-2 gap-6">
-          <Card className="col-span-2">
-            <ChartHeader value={range} onChange={setRange} />
-
-            <div className="h-60 bg-[var(--bg-surface)] rounded-lg">
-                <TicketChart range={range} />
-            </div>
+          <span className="text-xs text-gray-500">80% – 100%</span>
         </Card>
-          
 
-          <Card className='col-span-2 row-spa'>
-            <h3 className="text-sm text-[var(--text-secondary)] mb-4">
-              IT Scores
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Zander Hardin</span>
-                <span>91%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Vance Blanchard</span>
-                <span>91%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Ava Gilbert</span>
-                <span>90%</span>
-              </div>
+        {/* TOP SOLVERS */}
+        <Card className="rounded-xl h-full p-6 ">
+          <TopScorer />
+        </Card>
+
+        {/* TICKET STATUS */}
+        <Card className="rounded-xl h-full p-6">
+          <TicketStatus />
+        </Card>
+
+        {/* QA */}
+        <Card className="rounded-xl p-6 h-full flex flex-col">
+          <h3 className="text-sm text-gray-400 mb-3">QA this week</h3>
+
+          <div className="flex justify-center mb-3">
+            <span className="text-3xl font-bold">88%</span>
+          </div>
+
+          <div className="space-y-1 text-sm mt-auto">
+            <div className="flex justify-between">
+              <span>Zander Hardin</span>
+              <span>91%</span>
             </div>
-          </Card>
+            <div className="flex justify-between">
+              <span>Vance Blanchard</span>
+              <span>91%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Ava Gilbert</span>
+              <span>90%</span>
+            </div>
+          </div>
+        </Card>
 
-        </div>
-      </main>
-    </>
-  )
-}
+      </div>
 
-export default MainSection
+      {/* ================= SECOND ROW ================= */}
+      <div className="grid grid-cols-4 gap-6">
+
+        {/* TODAY PANEL */}
+        <Card className="rounded-xl p-6 col-span-1 h-[360px] flex flex-col justify-between">
+
+          <div>
+            <h3 className="text-sm text-gray-400 mb-6">Today</h3>
+
+            <div className="mb-6">
+              <div className="text-3xl font-bold">18m</div>
+              <div className="text-xs text-gray-400">First response time</div>
+            </div>
+
+            <div>
+              <div className="text-2xl font-bold">1h</div>
+              <div className="text-xs text-gray-400">Full resolution time</div>
+            </div>
+          </div>
+
+          <div className="bg-[#2b1f55] border border-red-500 rounded-lg p-4">
+            <div className="text-3xl font-bold text-red-400">45</div>
+            <div className="text-xs text-gray-400">Unassigned tickets</div>
+          </div>
+        </Card>
+
+        {/* TICKET VOLUME */}
+        <Card className="rounded-xl p-6 col-span-2 h-full">
+          
+          <div className="h-full">
+            <ChartHeader value={range} onChange={setRange} />
+            <TicketChart range={range} />
+          </div>
+        </Card>
+
+        {/* AGENT SCORES */}
+        <Card className="rounded-xl p-6 col-span-1 h-[360px]">
+          <h3 className="text-sm text-gray-400 mb-4">Agent scores</h3>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between"><span>Zander Hardin</span><span>91%</span></div>
+            <div className="flex justify-between"><span>Vance Blanchard</span><span>91%</span></div>
+            <div className="flex justify-between"><span>Ava Gilbert</span><span>90%</span></div>
+            <div className="flex justify-between"><span>Kaisley Burton</span><span>89%</span></div>
+            <div className="flex justify-between"><span>Aron Barnett</span><span>88%</span></div>
+            <div className="flex justify-between"><span>Nalini Prince</span><span>86%</span></div>
+            <div className="flex justify-between"><span>Vada Proctor</span><span>85%</span></div>
+            <div className="flex justify-between"><span>Loretta Hebert</span><span>85%</span></div>
+            <div className="flex justify-between"><span>Guillermo Carson</span><span>85%</span></div>
+          </div>
+        </Card>
+
+      </div>
+
+      {/* ================= FOOTER ================= */}
+      <div className="flex justify-between text-xs text-gray-500 pt-1">
+        <span>SysAid Helpdesk Dashboard</span>
+        <span>ver. 1.0</span>
+      </div>
+
+    </main>
+  );
+};
+
+export default MainSection;

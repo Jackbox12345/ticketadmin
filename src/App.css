@@ -8,7 +8,7 @@ html, body, #root {
 /* ---------- Base (Light Mode Default) ---------- */
 :root {
   /* === Primitive Palette (raw colors) === */
-  --indigo-500: #6366f1;
+  --indigo-500: #19baf4;
   --cyan-400: #22d3ee;
   --green-500: #22c55e;
   --amber-500: #f59e0b;
@@ -17,6 +17,7 @@ html, body, #root {
   --slate-950: #0f172a;
   --slate-900: #1e1b3a;
   --slate-800: #26224f;
+  --slate-200: #8a84c5;
   --slate-700: #2d2960;
   --slate-600: #3b376a;
   --slate-400: #94a3b8;
@@ -44,7 +45,7 @@ html, body, #root {
 .dark {
   --bg: #0b0a1f;
   --bg-surface: #14122b;
-  --bg-card: #1c1a3a;
+  --bg-card: #6963b55b;
 
   --text-primary: #ffffff;
   --text-secondary: #c7d2fe;
