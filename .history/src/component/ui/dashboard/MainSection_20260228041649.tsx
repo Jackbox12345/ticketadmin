@@ -3,12 +3,12 @@
 import { useState } from "react";
 import Card from "../Cards";
 import TicketChart from "./charts/TicketChart";
+import TopScorer from "./AllTicket";
 import TicketStatus from "./TicketStatus";
 import ChartHeader from "./ChartHeader";
 import TicketStatusToday from "./TicketStatusToday";
 import TopRequester from "./TopRequester";
 import TotalTickets from "./TotalTickets";
-import AllTicket from "./AllTicket";
 
 
 const options = ["daily", "weekly", "monthly", "yearly"] as const;
@@ -40,7 +40,7 @@ const MainSection = () => {
         <TotalTickets/>
         
         <Card className="rounded-xl p-6">
-          <AllTicket />
+          <TopScorer />
         </Card>
 
       </div>
