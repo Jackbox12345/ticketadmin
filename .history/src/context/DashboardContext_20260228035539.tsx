@@ -72,7 +72,7 @@ interface DashboardContextType {
   chart: ChartPoint[];
   ticketStatus: TicketStatusResponse | null;
   topRequester: TopRequester[];
-  totalTickets: TotalTickets | null;
+  totalTickets:TotalTickets;
   loading: boolean;
   error: string | null;
 

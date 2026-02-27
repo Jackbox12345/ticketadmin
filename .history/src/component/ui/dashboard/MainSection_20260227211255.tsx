@@ -7,9 +7,6 @@ import TopScorer from "./TopScorer";
 import TicketStatus from "./TicketStatus";
 import ChartHeader from "./ChartHeader";
 import TicketStatusToday from "./TicketStatusToday";
-import TopRequester from "./TopRequester";
-import TotalTickets from "./TotalTickets";
-
 
 const options = ["daily", "weekly", "monthly", "yearly"] as const;
 type Range = (typeof options)[number];
@@ -27,8 +24,8 @@ const MainSection = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
 
         {/* ROW 1 — FULL WIDTH */}
-        <Card className="rounded-xl md:col-span-2">
-          <div className="w-full flex justify-around">
+        <Card className="rounded-xl p-6 md:col-span-2">
+          <div className="w-full flex justify-between">
             <img className="w-[180px] h-[40px]"
              src="/images/panasiatic_logo3.png" alt="logo" />
           <ChartHeader value={range} onChange={setRange} />
@@ -36,8 +33,20 @@ const MainSection = () => {
         </Card>
 
         {/* ROW 2 — LEFT */}
-        
-        <TotalTickets/>
+        <Card className="rounded-xl p-6 flex flex-col justify-between">
+          <h3 className="text-lg text-center text-gray-400">
+            Total Tickets
+          </h3>
+
+          <div className="flex items-center justify-center flex-1">
+            <span className="text-4xl font-bold">95%</span>
+          </div>
+
+          <span className="text-lg text-center text-gray-400">
+            Tickets
+          </span>
+        </Card>
+
         
         <Card className="rounded-xl p-6">
           <TopScorer />
@@ -86,11 +95,34 @@ const MainSection = () => {
 
         {/* TICKET VOLUME */}
         <Card className="rounded-xl p-6 lg:col-span-2">
-          <TicketChart  />
+          <TicketChart range={range} />
         </Card>
 
         {/* AGENT SCORES */}
-       <TopRequester/>
+        <Card className="rounded-xl p-6 h-[360px]">
+          <h3 className="text-sm text-gray-400 mb-4">
+            Agent scores
+          </h3>
+
+          <div className="space-y-3 text-sm">
+            {[
+              ["Zander Hardin", "91%"],
+              ["Vance Blanchard", "91%"],
+              ["Ava Gilbert", "90%"],
+              ["Kaisley Burton", "89%"],
+              ["Aron Barnett", "88%"],
+              ["Nalini Prince", "86%"],
+              ["Vada Proctor", "85%"],
+              ["Loretta Hebert", "85%"],
+              ["Guillermo Carson", "85%"],
+            ].map(([name, score]) => (
+              <div key={name} className="flex justify-between">
+                <span>{name}</span>
+                <span>{score}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
 
       </div>
 

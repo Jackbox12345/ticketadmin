@@ -50,18 +50,15 @@ export interface TopRequester {
   Count: number;
 }
 
-export interface TotalTickets{
-  count:number;
-}
-
 export interface DashboardResponse {
   range: Range;
   chart: ChartPoint[];
   status: TicketStatusResponse;
   topRequester: TopRequester[];
-  totalTickets:TotalTickets;
 }
-
+export interface TotalTickets{
+  count:number;
+}
 
 /* ================= CONTEXT TYPE ================= */
 
@@ -72,7 +69,7 @@ interface DashboardContextType {
   chart: ChartPoint[];
   ticketStatus: TicketStatusResponse | null;
   topRequester: TopRequester[];
-  totalTickets: TotalTickets | null;
+
   loading: boolean;
   error: string | null;
 
@@ -93,8 +90,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [ticketStatus, setTicketStatus] =
     useState<TicketStatusResponse | null>(null);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
-  const [totalTickets, setTotalTickets] =
-    useState<TotalTickets | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,7 +108,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setChart(data.chart);
       setTicketStatus(data.status);
       setTopRequester(data.topRequester);
-      setTotalTickets(data.totalTickets);
     } catch {
       setError("Failed to load dashboard data");
     } finally {
@@ -147,7 +142,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         chart,
         ticketStatus,
         topRequester,
-        totalTickets,
         loading,
         error,
         refreshDashboard: () => loadDashboard(range),

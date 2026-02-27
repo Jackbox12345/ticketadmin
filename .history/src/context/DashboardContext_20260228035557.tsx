@@ -59,7 +59,7 @@ export interface DashboardResponse {
   chart: ChartPoint[];
   status: TicketStatusResponse;
   topRequester: TopRequester[];
-  totalTickets:TotalTickets;
+  totalTickets: TotalTickets | null;
 }
 
 
@@ -72,7 +72,7 @@ interface DashboardContextType {
   chart: ChartPoint[];
   ticketStatus: TicketStatusResponse | null;
   topRequester: TopRequester[];
-  totalTickets: TotalTickets | null;
+  totalTickets:TotalTickets;
   loading: boolean;
   error: string | null;
 

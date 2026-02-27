@@ -8,7 +8,6 @@ import TicketStatus from "./TicketStatus";
 import ChartHeader from "./ChartHeader";
 import TicketStatusToday from "./TicketStatusToday";
 import TopRequester from "./TopRequester";
-import TotalTickets from "./TotalTickets";
 
 
 const options = ["daily", "weekly", "monthly", "yearly"] as const;
@@ -36,8 +35,20 @@ const MainSection = () => {
         </Card>
 
         {/* ROW 2 — LEFT */}
-        
-        <TotalTickets/>
+        <Card className="rounded-xl p-6 flex flex-col justify-between">
+          <h3 className="text-lg text-center text-gray-400">
+            Total Tickets
+          </h3>
+
+          <div className="flex items-center justify-center flex-1">
+            <span className="text-4xl font-bold">15,500</span>
+          </div>
+
+          <span className="text-lg text-center text-gray-400">
+            Tickets
+          </span>
+        </Card>
+
         
         <Card className="rounded-xl p-6">
           <TopScorer />

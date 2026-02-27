@@ -1,6 +1,5 @@
-import { useDashboard } from "../../../context/DashboardContext";
 import { chartRanges } from "../../../misc/types";
-
+import { useDashboard } from "../../context/DashboardProvider";
 
 export default function ChartHeader() {
   const { range, setRange } = useDashboard();

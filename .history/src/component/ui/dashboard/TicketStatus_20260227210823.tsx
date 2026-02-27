@@ -2,23 +2,8 @@
 
 import { useDashboard } from "../../../context/DashboardContext";
 
-function getTitle(range: string) {
-  switch (range) {
-    case "daily":
-      return "Tickets in the last 24 hours";
-    case "weekly":
-      return "Tickets in the last 7 days";
-    case "monthly":
-      return "Tickets this month";
-    case "yearly":
-      return "Tickets this year";
-    default:
-      return "Tickets";
-  }
-}
-
 export default function TicketStatus() {
-  const { ticketStatus, loading, error, range } = useDashboard();
+  const { ticketStatus, loading, error } = useDashboard();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -26,8 +11,7 @@ export default function TicketStatus() {
 
   const total =
     ticketStatus.openCount +
-    ticketStatus.resolveCount +
-    ticketStatus.pendingCount;
+    ticketStatus.resolveCount+ ticketStatus.pendingCount;
 
   const percent = (value: number) =>
     total === 0 ? 0 : (value / total) * 100;
@@ -35,13 +19,13 @@ export default function TicketStatus() {
   return (
     <div className="space-y-6 px-3">
       <h3 className="text-xl text-white font-bold mb-20">
-        {getTitle(range)}
+        Tickets by Status this Month
       </h3>
 
       {[
         { label: "Open", value: ticketStatus.openCount },
         { label: "Closed", value: ticketStatus.resolveCount },
-        { label: "Pending", value: ticketStatus.pendingCount },
+        { label: "Pending", value: ticketStatus.pendingCount }
       ].map((item) => (
         <div key={item.label}>
           <div className="flex justify-between text-sm mb-1">
