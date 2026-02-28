@@ -1,9 +1,11 @@
 import { useDashboard } from "../../../context/DashboardContext";
+import Skeleton from "./Skeleton";
 
 export default function AllTicket() {
   const { totalTickets, loading, error } = useDashboard();
 
-  if (error) return <div className="px-3 text-red-400">{error}</div>;
+  if (error)
+    return <div className="px-3 text-red-400">{error}</div>;
 
   return (
     <div className="flex flex-col h-full px-3">
@@ -12,8 +14,8 @@ export default function AllTicket() {
       </h3>
 
       {loading ? (
-        <div className="flex justify-center items-center flex-1">
-          <div className="w-2.5 h-2.5 bg-[var(--primary)] rounded-full animate-bounce" />
+        <div className="flex items-center justify-center flex-1">
+          <Skeleton className="h-12 w-40" />
         </div>
       ) : (
         <div className="flex items-center justify-center flex-1">

@@ -1,5 +1,5 @@
-// src/component/ui/dashboard/TicketStatus.tsx
 
+import Skeleton from "./Skeleton";
 import { useDashboard } from "../../../context/DashboardContext";
 
 function getTitle(range: string) {
@@ -20,7 +20,24 @@ function getTitle(range: string) {
 export default function TicketStatus() {
   const { ticketStatus, loading, error, range } = useDashboard();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-6 px-3">
+        <Skeleton className="h-6 w-60" />
+
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="space-y-2">
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4 w-10" />
+            </div>
+            <Skeleton className="h-4 w-full" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (error) return <div>{error}</div>;
   if (!ticketStatus) return null;
 

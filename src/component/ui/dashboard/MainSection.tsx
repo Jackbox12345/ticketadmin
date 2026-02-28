@@ -23,7 +23,7 @@ const MainSection = () => {
 
           {/* ROW 1 — FULL WIDTH */}
           <Card className="rounded-xl md:col-span-2">
-            <div className="w-full flex mt-8 justify-around">
+            <div className="w-full flex mt-11 justify-around">
               <img className="w-[190px] h-[50px]"
                 src="/images/panasiatic_logo3.png" alt="logo" />
               <ChartHeader />
