@@ -19,7 +19,7 @@ export default function TopResolver() {
   }
 
   if (error)
-    return <Card className="rounded-xl p-6 h-[400px]">{error}</Card>;
+    return <Card className="rounded-xl p-6 h-full">{error}</Card>;
 
   const getMedal = (index: number) => {
     if (index === 0) return "👑";
@@ -29,7 +29,7 @@ export default function TopResolver() {
   };
 
   return (
-    <Card className="rounded-xl p-6 h-[400px] overflow-hidden">
+    <Card className="rounded-xl p-6 h-full overflow-hidden">
       <h3 className="text-xl text-white font-bold mb-4">
         Top Resolvers
       </h3>

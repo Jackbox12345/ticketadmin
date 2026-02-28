@@ -14,7 +14,7 @@ export default function TopRequester() {
 
   if (loading) {
     return (
-      <Card className="rounded-xl p-6 h-[400px] space-y-4">
+      <Card className="rounded-xl p-6 h-full space-y-4">
         <Skeleton className="h-6 w-40" />
         {[1, 2, 3, 4, 5].map((i) => (
           <Skeleton key={i} className="h-10 w-full" />
@@ -25,13 +25,13 @@ export default function TopRequester() {
 
   if (error)
     return (
-      <Card className="rounded-xl p-6 h-[400px] flex items-center justify-center">
+      <Card className="rounded-xl p-6 h-full flex items-center justify-center">
         {error}
       </Card>
     );
 
   return (
-    <Card className="rounded-xl p-6 h-[400px]">
+    <Card className="rounded-xl p-6 h-full">
       <h3 className="text-xl text-white font-bold mb-4">
         Top Requesters
       </h3>
