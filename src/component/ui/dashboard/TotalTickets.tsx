@@ -34,7 +34,7 @@ export default function TotalTickets() {
 
   return (
     <Card className="rounded-xl p-6 flex flex-col justify-between">
-      <h3 className="text-lg text-center text-gray-400">
+      <h3 className="text-xl text-white font-bold mb-4">
        {getTitle(range)}
       </h3>
 

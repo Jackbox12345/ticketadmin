@@ -34,7 +34,7 @@ export default function TicketStatus() {
 
   return (
     <div className="space-y-6 px-3">
-      <h3 className="text-xl text-white font-bold mb-20">
+      <h3 className="text-xl text-white font-bold mb-15">
         {getTitle(range)}
       </h3>
 
@@ -49,9 +49,9 @@ export default function TicketStatus() {
             <span>{item.value}</span>
           </div>
 
-          <div className="w-full bg-[#2d2157] rounded-lg h-2">
+          <div className="w-full bg-[#2d2157] rounded-md h-4">
             <div
-              className="bg-[var(--primary)] h-2 rounded-lg transition-all duration-500"
+              className="bg-[var(--primary)] h-4 rounded-md transition-all duration-500"
               style={{ width: `${percent(item.value)}%` }}
             />
           </div>

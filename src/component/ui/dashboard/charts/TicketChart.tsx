@@ -6,10 +6,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  Legend,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
 import { useDashboard } from "../../../../context/DashboardContext";
-
 
 /* ---------- format label depending on range ---------- */
 
@@ -52,26 +52,45 @@ function formatLabel(bucket: string, range: string) {
 export default function TicketChart() {
   const { chart, range } = useDashboard();
 
-  /* transform once for recharts */
   const data = chart.map((p) => ({
     label: formatLabel(p.bucket, range),
-    value: p.value,
+    totalValue: p.totalValue,
+    closedValue: p.closedValue,
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={260}>
+    <ResponsiveContainer width="100%" height={289}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#836ec9" />
         <XAxis dataKey="label" stroke="#aaa" />
         <YAxis stroke="#aaa" />
-        <Tooltip />
+        <Tooltip formatter={(value, name) => {
+          if (name === "totalValue") return [value, "Total Ticket"];
+          if (name === "closedValue") return [value, "Closed Ticket"];
+          return [value, name];
+        }} />
+        <Legend />
+
+        {/* Total Tickets - Blue */}
         <Line
           type="monotone"
-          dataKey="value"
+          dataKey="totalValue"
+          name="Total Ticket"
           stroke="#19baf4"
           strokeWidth={3}
           dot={false}
         />
+
+        {/* Closed Tickets - Red */}
+        <Line
+          type="monotone"
+          dataKey="closedValue"
+          name="Closed Ticket"
+          stroke="#ff4d4f"
+          strokeWidth={3}
+          dot={false}
+        />
+
         <RechartsDevtools />
       </LineChart>
     </ResponsiveContainer>

@@ -1,6 +1,4 @@
 // src/components/MainSection.tsx
-
-import { useState } from "react";
 import Card from "../Cards";
 import TicketChart from "./charts/TicketChart";
 import TicketStatus from "./TicketStatus";
@@ -9,72 +7,45 @@ import TicketStatusToday from "./TicketStatusToday";
 import TopRequester from "./TopRequester";
 import TotalTickets from "./TotalTickets";
 import AllTicket from "./AllTicket";
+import TopResolver from "./TopResolver";
 
 
-const options = ["daily", "weekly", "monthly", "yearly"] as const;
-type Range = (typeof options)[number];
 
 const MainSection = () => {
-  const [range, setRange] = useState<Range>("daily");
 
   return (
     <main className="flex-1 bg-[#1b1433] text-white p-6 space-y-6">
-      
-      {/* ================= TOP ROW ================= */}
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
 
-        {/* ROW 1 — FULL WIDTH */}
-        <Card className="rounded-xl md:col-span-2">
-          <div className="w-full flex justify-around">
-            <img className="w-[180px] h-[40px]"
-             src="/images/panasiatic_logo3.png" alt="logo" />
-          <ChartHeader value={range} onChange={setRange} />
-          </div>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
 
-        {/* ROW 2 — LEFT */}
-        
-        <TotalTickets/>
-        
-        <Card className="rounded-xl p-6">
-          <AllTicket />
-        </Card>
+          {/* ROW 1 — FULL WIDTH */}
+          <Card className="rounded-xl md:col-span-2">
+            <div className="w-full flex mt-8 justify-around">
+              <img className="w-[190px] h-[50px]"
+                src="/images/panasiatic_logo3.png" alt="logo" />
+              <ChartHeader />
+            </div>
+          </Card>
 
-      </div>
+          {/* ROW 2 — LEFT */}
+
+          <TotalTickets />
+
+          <Card className="rounded-xl p-6">
+            <AllTicket />
+          </Card>
+
+        </div>
 
         {/* TICKET STATUS */}
         <Card className="rounded-xl p-6">
           <TicketStatus />
         </Card>
 
-        {/* QA */}
-        <Card className="rounded-xl p-6 flex flex-col">
-          <h3 className="text-sm text-gray-400 mb-3">
-            QA this week
-          </h3>
-
-          <div className="flex justify-center mb-3">
-            <span className="text-3xl font-bold">88%</span>
-          </div>
-
-          <div className="space-y-1 text-sm mt-auto">
-            <div className="flex justify-between">
-              <span>Zander Hardin</span>
-              <span>91%</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Vance Blanchard</span>
-              <span>91%</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Ava Gilbert</span>
-              <span>90%</span>
-            </div>
-          </div>
-        </Card>
+        <TopResolver/>
 
       </div>
 
@@ -86,11 +57,12 @@ const MainSection = () => {
 
         {/* TICKET VOLUME */}
         <Card className="rounded-xl p-6 lg:col-span-2">
-          <TicketChart  />
+          <h3 className="text-xl text-white font-bold mb-4">Chart</h3>
+          <TicketChart />
         </Card>
 
         {/* AGENT SCORES */}
-       <TopRequester/>
+        <TopRequester />
 
       </div>
 

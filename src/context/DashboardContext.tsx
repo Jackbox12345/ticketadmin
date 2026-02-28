@@ -37,16 +37,32 @@ export interface TicketStatusResponse {
   resolveCount: number;
   pendingCount: number;
   totalCount: number;
+
+  firstResponseMinutes: number;
+  fullResponseMinutes: number;
+  unassignedCount: number;
+}
+
+export interface TodayStatus {
+  firstResponseMinutes: number;
+  fullResponseMinutes: number;
+  unassignedCount: number;
+}
+
+export interface TopResolver {
+  first_name: string;
+  last_name: string;
+  ClosedCount: number;
 }
 
 export interface ChartPoint {
   bucket: string;
-  value: number;
+  totalValue: number;
+  closedValue: number;
 }
-
 export interface TopRequester {
   first_name: string;
-  last_name:string;
+  last_name: string;
   Count: number;
 }
 
@@ -60,7 +76,8 @@ export interface DashboardResponse {
   chart: ChartPoint[];
   status: TicketStatusResponse;
   topRequester: TopRequester[];
-  totalTickets:TotalTickets;
+  topResolver: TopResolver[]; 
+  totalTickets: TotalTickets;
 }
 
 
@@ -72,11 +89,12 @@ interface DashboardContextType {
 
   chart: ChartPoint[];
   ticketStatus: TicketStatusResponse | null;
+  todayStatus: TodayStatus | null;
   topRequester: TopRequester[];
+  topResolver: TopResolver[];
   totalTickets: TotalTickets | null;
   loading: boolean;
   error: string | null;
-
   refreshDashboard: () => Promise<void>;
 }
 
@@ -93,7 +111,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [ticketStatus, setTicketStatus] =
     useState<TicketStatusResponse | null>(null);
+  const [todayStatus,setTodayStatus] =
+    useState<TodayStatus | null>(null);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
+  const [topResolver, setTopResolver] = useState<TopResolver[]>([]);
   const [totalTickets, setTotalTickets] =
     useState<TotalTickets | null>(null);
   const [loading, setLoading] = useState(true);
@@ -114,6 +135,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setTicketStatus(data.status);
       setTopRequester(data.topRequester);
       setTotalTickets(data.totalTickets);
+      setTopResolver(data.topResolver);
+      // 👇 ADD THIS
+      const today = await fetchData<TodayStatus>(
+        "http://localhost:3010/api/todayStatus"
+      );
+      setTodayStatus(today);
     } catch {
       setError("Failed to load dashboard data");
     } finally {
@@ -147,7 +174,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setRange,
         chart,
         ticketStatus,
+        todayStatus,   // 👈 ADD THIS
         topRequester,
+        topResolver,
         totalTickets,
         loading,
         error,
