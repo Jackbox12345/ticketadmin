@@ -42,8 +42,8 @@ export interface TicketStatusResponse {
 }
 
 export interface AverageStatus {
-  avgFirstResponseSeconds: number;
-  avgFullResponseSeconds: number;
+  avgFirstResponseMinutes: number;
+  avgFullResponseMinutes: number;
   unassignedCount: number;
 }
 
@@ -157,7 +157,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const interval = setInterval(() => {
       loadDashboard(range);
       console.log("Dashboard Reloading");
-    }, 60000);
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [range]);

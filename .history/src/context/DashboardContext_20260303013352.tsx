@@ -42,8 +42,8 @@ export interface TicketStatusResponse {
 }
 
 export interface AverageStatus {
-  avgFirstResponseSeconds: number;
-  avgFullResponseSeconds: number;
+  avgFirstResponseMinutes: number;
+  avgFullResponseMinutes: number;
   unassignedCount: number;
 }
 
