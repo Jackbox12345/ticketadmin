@@ -27,7 +27,7 @@ const MainSection = () => {
 
               <div className="bg-white px-2 rounded-xl shadow-md">
                 <img
-                  className="w-[210px] h-[65px] object-contain"
+                  className="w-[230px] h-[65px] object-contain"
                   src="/images/panasiatic_logo3.png"
                   alt="logo"
                 />

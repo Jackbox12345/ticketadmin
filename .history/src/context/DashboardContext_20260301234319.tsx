@@ -1,5 +1,3 @@
-// src/context/DashboardContext.tsx
-
 import {
   createContext,
   useContext,
@@ -39,11 +37,15 @@ export interface TicketStatusResponse {
   resolveCount: number;
   pendingCount: number;
   totalCount: number;
+
+  firstResponseMinutes: number;
+  fullResponseMinutes: number;
+  unassignedCount: number;
 }
 
-export interface AverageStatus {
-  avgFirstResponseMinutes: number;
-  avgFullResponseMinutes: number;
+export interface TodayStatus {
+  firstResponseMinutes: number;
+  fullResponseMinutes: number;
   unassignedCount: number;
 }
 
@@ -58,7 +60,6 @@ export interface ChartPoint {
   totalValue: number;
   closedValue: number;
 }
-
 export interface TopRequester {
   first_name: string;
   last_name: string;
@@ -74,11 +75,11 @@ export interface DashboardResponse {
   range: Range;
   chart: ChartPoint[];
   status: TicketStatusResponse;
-  averageStatus: AverageStatus;
   topRequester: TopRequester[];
-  topResolver: TopResolver[];
+  topResolver: TopResolver[]; 
   totalTickets: TotalTickets;
 }
+
 
 /* ================= CONTEXT TYPE ================= */
 
@@ -88,11 +89,10 @@ interface DashboardContextType {
 
   chart: ChartPoint[];
   ticketStatus: TicketStatusResponse | null;
-  averageStatus: AverageStatus | null;
+  todayStatus: TodayStatus | null;
   topRequester: TopRequester[];
   topResolver: TopResolver[];
   totalTickets: TotalTickets | null;
-
   loading: boolean;
   error: string | null;
   refreshDashboard: () => Promise<void>;
@@ -111,8 +111,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [ticketStatus, setTicketStatus] =
     useState<TicketStatusResponse | null>(null);
-  const [averageStatus, setAverageStatus] =
-    useState<AverageStatus | null>(null);
+  const [todayStatus,setTodayStatus] =
+    useState<TodayStatus | null>(null);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
   const [topResolver, setTopResolver] = useState<TopResolver[]>([]);
   const [totalTickets, setTotalTickets] =
@@ -128,16 +128,19 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     try {
       const data = await fetchData<DashboardResponse>(
-        `http://localhost:3010/api/dashboard?range=${selectedRange}`
+        `http://bac-dev08:3010/api/dashboard?range=${selectedRange}`
       );
 
       setChart(data.chart);
       setTicketStatus(data.status);
-      setAverageStatus(data.averageStatus);
       setTopRequester(data.topRequester);
-      setTopResolver(data.topResolver);
       setTotalTickets(data.totalTickets);
-
+      setTopResolver(data.topResolver);
+      // 👇 ADD THIS
+      const today = await fetchData<TodayStatus>(
+        "http://bac-dev08:3010/api/todayStatus"
+      );
+      setTodayStatus(today);
     } catch {
       setError("Failed to load dashboard data");
     } finally {
@@ -171,7 +174,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setRange,
         chart,
         ticketStatus,
-        averageStatus,
+        todayStatus,   // 👈 ADD THIS
         topRequester,
         topResolver,
         totalTickets,

@@ -128,7 +128,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     try {
       const data = await fetchData<DashboardResponse>(
-        `http://localhost:3010/api/dashboard?range=${selectedRange}`
+        `http://bac-dev08:3010/api/dashboard?range=${selectedRange}`
       );
 
       setChart(data.chart);

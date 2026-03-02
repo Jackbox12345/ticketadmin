@@ -23,11 +23,11 @@ const MainSection = () => {
 
           {/* ROW 1 — FULL WIDTH */}
           <Card className="rounded-xl md:col-span-2">
-            <div className="w-full flex items-center mt-4 justify-between  py-6">
+            <div className="w-full flex items-center mt-4 justify-between ">
 
-              <div className="bg-white px-2 rounded-xl shadow-md">
+              <div className="bg-white  rounded-xl shadow-md">
                 <img
-                  className="w-[210px] h-[65px] object-contain"
+                  className="w-[230px] h-[65px] object-contain"
                   src="/images/panasiatic_logo3.png"
                   alt="logo"
                 />

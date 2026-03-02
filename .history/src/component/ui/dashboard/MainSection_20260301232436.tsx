@@ -22,18 +22,27 @@ const MainSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:col-span-2">
 
           {/* ROW 1 — FULL WIDTH */}
-          <Card className="rounded-xl md:col-span-2">
-            <div className="w-full flex items-center mt-4 justify-between  py-6">
+          <Card className="rounded-xl md:col-span-2 overflow-hidden">
+            <div className="bg-[#3f3668] px-10 py-10 rounded-xl">
+              
+              <div className="flex items-center gap-10">
 
-              <div className="bg-white px-2 rounded-xl shadow-md">
-                <img
-                  className="w-[210px] h-[65px] object-contain"
-                  src="/images/panasiatic_logo3.png"
-                  alt="logo"
-                />
+                {/* Logo */}
+                <div className="bg-white px-8 py-4 rounded-2xl shadow-md flex items-center">
+                  <img
+                    className="h-[100px] object-contain"
+                    src="/images/panasiatic_logo3.png"
+                    alt="Panasiatic Logo"
+                  />
+                </div>
+
+                {/* Buttons */}
+                <div>
+                  <ChartHeader />
+                </div>
+
               </div>
 
-              <ChartHeader />
             </div>
           </Card>
 
