@@ -38,13 +38,13 @@ export default function TopResolver() {
         {topResolver.length === 0 ? (
           <div className="text-gray-400">No data</div>
         ) : (
-          topResolver.slice(0, 5).map((user, index) => {
+          topResolver.slice(0, 10).map((user, index) => {
             const isFirst = index === 0;
 
             return (
               <div
                 key={`${user.first_name}-${index}`}
-                className={`flex justify-between items-center rounded-md px-4 py-3 transition-all duration-300
+                className={`flex justify-between items-center rounded-md px-2 py-1 transition-all duration-300
                   ${
                     isFirst
                       ? "bg-gradient-to-r from-yellow-500/20 to-yellow-300/10 border border-yellow-400 shadow-lg scale-[1.03]"
