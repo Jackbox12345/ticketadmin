@@ -44,7 +44,7 @@ export default function TopResolver() {
             return (
               <div
                 key={`${user.first_name}-${index}`}
-                className={`flex justify-between items-center rounded-md px-2 py-1 transition-all duration-300
+                className={`flex justify-between items-center rounded-md px-2 py-2 transition-all duration-300
                   ${
                     isFirst
                       ? "bg-gradient-to-r from-yellow-500/20 to-yellow-300/10 border border-yellow-400 shadow-lg scale-[1.03]"
