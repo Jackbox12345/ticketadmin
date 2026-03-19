@@ -28,7 +28,7 @@ export default function AllTicket() {
   }
 
   return (
-    <>
+    <Card className="rounded-xl p-6 h-full overflow-hidden">
       <h3 className="text-xl text-white font-bold mb-4">Top Categories</h3>
 
       <div className="space-y-3 text-sm">
@@ -78,6 +78,6 @@ export default function AllTicket() {
           })
         )}
       </div>
-    </>
+    </Card>
   );
 }

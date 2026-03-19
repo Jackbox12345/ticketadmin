@@ -41,26 +41,23 @@ export default function TotalTickets() {
     );
 
   return (
-    <Card className="rounded-xl p-6 flex flex-col justify-between h-full">
-      {/* TOP SECTION */}
-      <div className="flex flex-col items-center justify-center flex-1 text-center">
-        <h3 className="text-xl text-white font-bold mb-2">{getTitle(range)}</h3>
-
-        <span className="text-4xl font-bold text-white">
+    <Card className="rounded-xl p-6 flex flex-col justify-between">
+      <div className="flex items-center justify-center flex-1">
+        <h3 className="text-xl text-white text-center font-bold mb-4">
+          {getTitle(range)}
+        </h3>
+        <span className="text-4xl font-bold">
           {(totalTickets?.rangeTotal ?? 0).toLocaleString()}
         </span>
       </div>
 
-      {/* BOTTOM SECTION */}
-      <div className="text-center mt-4">
-        <span className="text-sm text-gray-400 block">
-          All Time Total Tickets
-        </span>
+      <span className="text-lg text-center text-gray-400 block">
+        All Time Total Tickets
+      </span>
 
-        <span className="text-2xl font-bold text-white block mt-1">
-          {(totalTickets?.allTimeTotal ?? 0).toLocaleString()}
-        </span>
-      </div>
+      <span className="text-3xl font-bold text-center text-white block mt-1">
+        {(totalTickets?.allTimeTotal ?? 0).toLocaleString()}
+      </span>
     </Card>
   );
 }
