@@ -79,7 +79,6 @@ export interface DashboardResponse {
   topRequester: TopRequester[];
   topResolver: TopResolver[];
   totalTickets: TotalTickets;
-  topCategory: TopCategory[];
 }
 
 /* ================= CONTEXT TYPE ================= */
@@ -94,7 +93,6 @@ interface DashboardContextType {
   topRequester: TopRequester[];
   topResolver: TopResolver[];
   totalTickets: TotalTickets | null;
-  topCategory: TopCategory[];
 
   loading: boolean;
   error: string | null;
@@ -118,7 +116,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [averageStatus, setAverageStatus] = useState<AverageStatus | null>(
     null,
   );
-  const [topCategory, setTopCategory] = useState<TopCategory[]>([]);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
   const [topResolver, setTopResolver] = useState<TopResolver[]>([]);
   const [totalTickets, setTotalTickets] = useState<TotalTickets | null>(null);
@@ -142,7 +139,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setTopRequester(data.topRequester);
       setTopResolver(data.topResolver);
       setTotalTickets(data.totalTickets);
-      setTopCategory(data.topCategory);
     } catch {
       setError("Failed to load dashboard data");
     } finally {
@@ -179,7 +175,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         averageStatus,
         topRequester,
         topResolver,
-        topCategory,
         totalTickets,
         loading,
         error,
