@@ -34,13 +34,13 @@ const MainSection = () => {
           <TotalTickets />
 
           <Card className="rounded-xl p-6">
-            <TicketStatus />
+            <AllTicket />
           </Card>
         </div>
 
         {/* TICKET STATUS */}
         <Card className="rounded-xl p-6">
-          <AllTicket />
+          <TicketStatus />
         </Card>
 
         <TopResolver />

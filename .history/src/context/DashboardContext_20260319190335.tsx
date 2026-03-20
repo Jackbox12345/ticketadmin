@@ -133,7 +133,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     try {
       const data = await fetchData<DashboardResponse>(
-        `http://172.30.1.157:8050/api/dashboard?range=${selectedRange}`,
+        `http://localhost:3010/api/dashboard?range=${selectedRange}`,
       );
 
       setChart(data.chart);

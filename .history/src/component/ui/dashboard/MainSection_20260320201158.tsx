@@ -36,12 +36,11 @@ const MainSection = () => {
           <Card className="rounded-xl p-6">
             <TicketStatus />
           </Card>
-        </div>
 
-        {/* TICKET STATUS */}
-        <Card className="rounded-xl p-6">
-          <AllTicket />
-        </Card>
+          <Card className="rounded-xl p-6">
+            <AllTicket />
+          </Card>
+        </div>
 
         <TopResolver />
       </div>
