@@ -1,3 +1,4 @@
+// /components/AllTicket.tsx
 import { useDashboard } from "../../../context/DashboardContext";
 import Card from "../Cards";
 import Skeleton from "./Skeleton";
@@ -5,11 +6,27 @@ import Skeleton from "./Skeleton";
 export default function AllTicket() {
   const { topCategory, loading, error } = useDashboard();
 
-  const getMedal = (index) => {
-    if (index === 0) return "👑";
-    if (index === 1) return "🥈";
-    if (index === 2) return "🥉";
-    return `${index + 1}.`;
+  const iconMap: Record<string, string> = {
+    "Access Control": "🔐",
+    "Account Login": "👤",
+    Announcements: "📢",
+    "Basic Software": "💻",
+    "BIOS/PUSH": "⚙️",
+    "Change Control": "🔄",
+    Hardware: "🖥️",
+    Network: "🌐",
+    none: "❓",
+    "PAYSLIP ACCESS": "💰",
+    "Production Tools": "🛠️",
+    "Security Incident": "🚨",
+    "Service Request": "📋",
+    Software: "🧩",
+    "Work Order": "📦",
+  };
+
+  const getIcon = (type?: string) => {
+    if (!type) return "❓";
+    return iconMap[type] || "📁";
   };
 
   if (loading) {
@@ -49,10 +66,9 @@ export default function AllTicket() {
                   }`}
               >
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`text-xl ${isFirst ? "animate-bounce" : ""}`}
-                  >
-                    {getMedal(index)}
+                  
+                  <span className="text-lg">
+                    {getIcon(item.problem_type)}
                   </span>
 
                   <span

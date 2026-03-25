@@ -2,11 +2,11 @@ import { useDashboard } from "../../../context/DashboardContext";
 import Card from "../Cards";
 import Skeleton from "./Skeleton";
 
-export default function TopRequester() {
-  const { topRequester, loading, error } = useDashboard();
+export default function AllTicket() {
+  const { topCategory, loading, error } = useDashboard();
 
   const getMedal = (index: number) => {
-    if (index === 0) return "🥇";
+    if (index === 0) return "👑";
     if (index === 1) return "🥈";
     if (index === 2) return "🥉";
     return `${index + 1}.`;
@@ -14,50 +14,43 @@ export default function TopRequester() {
 
   if (loading) {
     return (
-      <Card className="rounded-xl p-6 h-full space-y-4">
+      <Card className="rounded-xl p-6 h-[400px] space-y-4">
         <Skeleton className="h-6 w-40" />
-        {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} className="h-10 w-full" />
-        ))}
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
       </Card>
     );
   }
 
-  if (error)
-    return (
-      <Card className="rounded-xl p-6 h-full flex items-center justify-center">
-        {error}
-      </Card>
-    );
+  if (error) {
+    return <Card className="rounded-xl p-6 h-full text-red-400">{error}</Card>;
+  }
 
   return (
-    <Card className="rounded-xl p-6 h-full">
-      <h3 className="text-xl text-white font-bold mb-4">
-        Top All Time Resolvers
-      </h3>
+    <>
+      <h3 className="text-xl text-white font-bold mb-4">Top Categories</h3>
 
       <div className="space-y-3 text-sm">
-        {topRequester.length === 0 ? (
+        {topCategory?.length === 0 ? (
           <div className="text-gray-400">No data</div>
         ) : (
-          topRequester.slice(0, 5).map((user, index) => {
+          topCategory.slice(0, 10).map((item, index) => {
             const isFirst = index === 0;
 
             return (
               <div
-                key={`${user.first_name}-${index}`}
-                className={`flex justify-between items-center px-4 py-2 rounded-md transition-all duration-300
+                key={`${item.problem_type}-${index}`}
+                className={`flex justify-between items-center rounded-md px-2 py-2 transition-all duration-300
                   ${
                     isFirst
-                      ? "bg-gradient-to-r from-yellow-500/20 to-yellow-300/10 border border-yellow-400 shadow-lg"
+                      ? "bg-gradient-to-r from-yellow-500/20 to-yellow-300/10 border border-yellow-400 shadow-lg scale-[1.03]"
                       : "bg-[#2b1f55]"
                   }`}
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={`text-lg ${
-                      isFirst ? "animate-bounce" : ""
-                    }`}
+                    className={`text-xl ${isFirst ? "animate-bounce" : ""}`}
                   >
                     {getMedal(index)}
                   </span>
@@ -65,11 +58,11 @@ export default function TopRequester() {
                   <span
                     className={`${
                       isFirst
-                        ? "text-yellow-300 font-bold"
+                        ? "text-lg font-bold text-yellow-300"
                         : "text-white"
                     }`}
                   >
-                    {user.first_name} {user.last_name}
+                    {item.problem_type ?? "Unknown"}
                   </span>
                 </div>
 
@@ -78,13 +71,13 @@ export default function TopRequester() {
                     isFirst ? "text-yellow-300 text-lg" : "text-white"
                   }`}
                 >
-                  {user.ClosedCount}
+                  {item.Count?.toLocaleString() ?? 0}
                 </span>
               </div>
             );
           })
         )}
       </div>
-    </Card>
+    </>
   );
 }

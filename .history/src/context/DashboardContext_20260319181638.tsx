@@ -63,7 +63,7 @@ export interface ChartPoint {
 export interface TopRequester {
   first_name: string;
   last_name: string;
-  ClosedCount: number;
+  Count: number;
 }
 
 export interface TotalTickets {
@@ -132,11 +132,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      // const data = await fetchData<DashboardResponse>(
-      //   `http://172.30.1.157:8050/api/dashboard?range=${selectedRange}`,
-      // );
       const data = await fetchData<DashboardResponse>(
-        `http://localhost:8050/api/dashboard?range=${selectedRange}`,
+        `http://bac-dev08:3010/api/dashboard?range=${selectedRange}`,
       );
 
       setChart(data.chart);
