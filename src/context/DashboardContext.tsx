@@ -43,6 +43,16 @@ export interface AverageStatus {
   avgFullResponseSeconds: number;
   unassignedCount: number;
 }
+export interface ChangeControl{
+  id:number;
+  description:string;
+  insert_time:string;
+}
+export interface UnassignedTicket{
+  id:number;
+  description:string;
+  insert_time:string;
+}
 
 export interface TopResolver {
   first_name: string;
@@ -80,6 +90,8 @@ export interface DashboardResponse {
   topResolver: TopResolver[];
   totalTickets: TotalTickets;
   topCategory: TopCategory[];
+  changeControl:ChangeControl[];
+  unassignedTicket:UnassignedTicket[];
 }
 
 /* ================= CONTEXT TYPE ================= */
@@ -95,6 +107,8 @@ interface DashboardContextType {
   topResolver: TopResolver[];
   totalTickets: TotalTickets | null;
   topCategory: TopCategory[];
+  changeControl:ChangeControl[];
+  unassignedTicket:UnassignedTicket[];
 
   loading: boolean;
   error: string | null;
@@ -118,6 +132,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [averageStatus, setAverageStatus] = useState<AverageStatus | null>(
     null,
   );
+  const [unassignedTicket, setUnassignedTicket] = useState<ChangeControl[]>([]);
+  const [changeControl, setChangeControl] = useState<ChangeControl[]>([]);
   const [topCategory, setTopCategory] = useState<TopCategory[]>([]);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
   const [topResolver, setTopResolver] = useState<TopResolver[]>([]);
@@ -133,10 +149,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     try {
       // const data = await fetchData<DashboardResponse>(
-      //   `http://172.30.1.157:8050/api/dashboard?range=${selectedRange}`,
+      //   `http://localhost:8050/api/dashboard?range=${selectedRange}`,
       // );
       const data = await fetchData<DashboardResponse>(
-        `http://localhost:8050/api/dashboard?range=${selectedRange}`,
+        `http://bac-dev08:8050/api/dashboard?range=${selectedRange}`,
       );
 
       setChart(data.chart);
@@ -146,6 +162,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setTopResolver(data.topResolver);
       setTotalTickets(data.totalTickets);
       setTopCategory(data.topCategory);
+      setChangeControl(data.changeControl);
+      setUnassignedTicket(data.unassignedTicket)
     } catch {
       setError("Failed to load dashboard data");
     } finally {
@@ -184,6 +202,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         topResolver,
         topCategory,
         totalTickets,
+        changeControl,
+        unassignedTicket,
         loading,
         error,
         refreshDashboard: () => loadDashboard(range),

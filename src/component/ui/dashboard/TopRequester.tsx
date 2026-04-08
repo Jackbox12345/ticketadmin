@@ -3,7 +3,7 @@ import Card from "../Cards";
 import Skeleton from "./Skeleton";
 
 export default function TopRequester() {
-  const { topRequester, loading, error } = useDashboard();
+  const { topRequester, totalTickets,loading, error } = useDashboard();
 
   const getMedal = (index: number) => {
     if (index === 0) return "🥇";
@@ -29,14 +29,22 @@ export default function TopRequester() {
         {error}
       </Card>
     );
-
+    
   return (
     <Card className="rounded-xl p-6 h-full">
-      <h3 className="text-xl text-white font-bold mb-4">
+    <div className="flex justify-between items-center">
+      <h3 className="text-m text-white font-bold">
         Top All Time Resolvers
       </h3>
 
-      <div className="space-y-3 text-sm">
+      <span className=" text-white px-3 py-1 rounded-full text-sm font-semibold">
+        Tickets{" "}
+        <span className="font-extrabold ml-1">
+          {Number(totalTickets?.allTimeTotal).toLocaleString()}
+        </span>
+      </span>
+    </div>
+      <div className="space-y-3 text-sm mt-4">
         {topRequester.length === 0 ? (
           <div className="text-gray-400">No data</div>
         ) : (
