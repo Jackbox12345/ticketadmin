@@ -2,9 +2,9 @@ let socket: WebSocket | null = null;
 let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 let manuallyClosed = false;
 
-const WS_URL = "ws://localhost:8080";
+const WS_URL = import.meta.env.VITE_WS_URL ?? "ws://localhost:8080";
 
-export function connectSocket(onMessage: (data: any) => void) {
+export function connectSocket(onMessage: (data: unknown) => void) {
   if (socket && socket.readyState === WebSocket.OPEN) {
     return socket;
   }
@@ -48,7 +48,7 @@ socket.onmessage = (event) => {
 
 export function disconnectSocket() {
   manuallyClosed = true;
-  reconnectTimeout && clearTimeout(reconnectTimeout);
+  if (reconnectTimeout) clearTimeout(reconnectTimeout);
   socket?.close();
   socket = null;
 }

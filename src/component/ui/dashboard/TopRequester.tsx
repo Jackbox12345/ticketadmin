@@ -33,11 +33,11 @@ export default function TopRequester() {
   return (
     <Card className="rounded-xl p-6 h-full">
     <div className="flex justify-between items-center">
-      <h3 className="text-m text-white font-bold">
-        Top All Time Resolvers
+      <h3 className="text-xl text-white font-bold mb-4">
+        Top All Time Resolvers {new Date().getFullYear()}
       </h3>
 
-      <span className=" text-white px-3 py-1 rounded-full text-sm font-semibold">
+      <span className=" text-white px-3 py-1 rounded-full text-sm font-semibold mb-4">
         Tickets{" "}
         <span className="font-extrabold ml-1">
           {Number(totalTickets?.allTimeTotal).toLocaleString()}
