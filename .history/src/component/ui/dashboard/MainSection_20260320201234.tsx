@@ -1,7 +1,11 @@
+// src/components/MainSection.tsx
 import Card from "../Cards";
 import TicketChart from "./charts/TicketChart";
+import TicketStatus from "./TicketStatus";
 import ChartHeader from "./ChartHeader";
-
+import TicketStatusToday from "./TicketStatusToday";
+import TopRequester from "./TopRequester";
+import TotalTickets from "./TotalTickets";
 import AllTicket from "./AllTicket";
 import TopResolver from "./TopResolver";
 
@@ -21,25 +25,22 @@ const MainSection = () => {
                 />
               </div>
 
-            <Card className="rounded-xl p-6 lg:col-span-3 min-h-[10px]">
-              <h3 className="text-xl font-bold mb-4">Category Tree Map</h3>
-              <ChartData />
-            </Card>
+              <ChartHeader />
+            </div>
+          </Card>
 
-            <Card className="rounded-xl p-6">
-              <AllTicket />
-            </Card>
+          {/* ROW 2 — LEFT */}
 
-          </div>
+          <TotalTickets />
 
           <Card className="rounded-xl p-6">
-            <TicketStatus />
+            <AllTicket />
           </Card>
         </div>
 
         {/* TICKET STATUS */}
         <Card className="rounded-xl p-6">
-          <AllTicket />
+          <TicketStatus />
         </Card>
 
         <TopResolver />
@@ -50,14 +51,18 @@ const MainSection = () => {
         {/* TODAY PANEL */}
         <TicketStatusToday />
 
-        </div>
+        {/* TICKET VOLUME */}
+        <Card className="rounded-xl p-6 lg:col-span-2">
+          <h3 className="text-xl text-white font-bold mb-4">Chart</h3>
+          <TicketChart />
+        </Card>
 
         {/* AGENT SCORES */}
         <TopRequester />
       </div>
 
-      {/* FOOTER */}
-      <div className="flex justify-between text-xs text-gray-500 pt-4">
+      {/* ================= FOOTER ================= */}
+      <div className="flex justify-between text-xs text-gray-500 pt-1">
         <span>SysAid Helpdesk Dashboard</span>
         <span>ver. 1.0</span>
       </div>
