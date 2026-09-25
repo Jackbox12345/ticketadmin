@@ -183,7 +183,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
     try {
       const data = await fetchData<DashboardResponse>(
-        `http://172.30.1.157:8050/api/dashboard?range=${selectedRange}`,
+        `${API_BASE_URL}/api/dashboard?range=${encodeURIComponent(selectedRange)}`,
+        controller,
       );
 
       if (controller.signal.aborted) return;
