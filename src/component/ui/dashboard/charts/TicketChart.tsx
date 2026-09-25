@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
 import { useDashboard } from "../../../../context/DashboardContext";
+import Skeleton from "../Skeleton";
 
 /* ---------- format label depending on range ---------- */
 
@@ -32,10 +33,12 @@ function formatLabel(bucket: string, range: string) {
         timeZone: "Asia/Manila",
       });
 
-    case "monthly":
-      return `WE ${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-        date.getDate()
-      ).padStart(2, "0")}`;
+      case "monthly":
+      return date.toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: "Asia/Manila",
+      });
 
     case "yearly":
       return date.toLocaleDateString("en-US", {
@@ -50,7 +53,7 @@ function formatLabel(bucket: string, range: string) {
 }
 
 export default function TicketChart() {
-  const { chart, range } = useDashboard();
+  const { chart, range, loading } = useDashboard();
 
   const data = chart.map((p) => ({
     label: formatLabel(p.bucket, range),
@@ -58,11 +61,26 @@ export default function TicketChart() {
     closedValue: p.closedValue,
   }));
 
+  if (loading) {
+    return (
+      <div aria-label="Loading ticket activity" aria-busy="true">
+        <Skeleton className="h-[289px] w-full" />
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer width="100%" height={289}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#836ec9" />
-        <XAxis dataKey="label" stroke="#aaa" />
+        <XAxis
+          dataKey="label"
+          stroke="#aaa"
+          interval={0} // ✅ show ALL labels
+          angle={-45}  // optional (prevent overlap)
+          textAnchor="end"
+          tick={{ fontSize: 10 }}
+        />
         <YAxis stroke="#aaa" />
         <Tooltip formatter={(value, name) => {
           if (name === "totalValue") return [value, "Total Ticket"];
@@ -91,7 +109,7 @@ export default function TicketChart() {
           dot={false}
         />
 
-        <RechartsDevtools />
+        {import.meta.env.DEV && <RechartsDevtools />}
       </LineChart>
     </ResponsiveContainer>
   );

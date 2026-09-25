@@ -1,18 +1,27 @@
-// src/context/DashboardContext.tsx
-
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 
 /* ================= FETCH UTILITY ================= */
 
-async function fetchData<T>(endpoint: string, timeout = 5000): Promise<T> {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+async function fetchData<T>(
+  endpoint: string,
+  controller: AbortController,
+  timeout = 5000,
+): Promise<T> {
+  const id = setTimeout(
+    () =>
+      controller.abort(
+        new DOMException("Dashboard request timed out", "TimeoutError"),
+      ),
+    timeout,
+  );
 
   try {
     const response = await fetch(endpoint, { signal: controller.signal });
@@ -26,6 +35,10 @@ async function fetchData<T>(endpoint: string, timeout = 5000): Promise<T> {
     clearTimeout(id);
   }
 }
+
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ?? "http://bac-dev08:8050"
+).replace(/\/$/, "");
 
 /* ================= TYPES ================= */
 
@@ -44,11 +57,35 @@ export interface AverageStatus {
   unassignedCount: number;
 }
 
+export interface ChangeControl {
+  id: number;
+  description: string;
+  insert_time: string;
+}
+
+export interface TicketItem {
+  id: number;
+  description: string;
+  title: string;
+  insert_time: string;
+  responsibility: string;
+  status: number;
+}
+
+export interface UnassignedTicket {
+  unassignedTicket: TicketItem[];
+  openResult: TicketItem[];
+  pendingResult: TicketItem[];
+}
+
 export interface TopResolver {
   first_name: string;
   last_name: string;
   ClosedCount: number;
+  AvgFullResponseSeconds: number;
+  AvgFirstResponseSeconds:number;
 }
+
 export interface TopCategory {
   problem_type: string;
   Count: number;
@@ -63,7 +100,7 @@ export interface ChartPoint {
 export interface TopRequester {
   first_name: string;
   last_name: string;
-  Count: number;
+  ClosedCount: number;
 }
 
 export interface TotalTickets {
@@ -80,6 +117,8 @@ export interface DashboardResponse {
   topResolver: TopResolver[];
   totalTickets: TotalTickets;
   topCategory: TopCategory[];
+  changeControl: ChangeControl[];
+  unassignedTicket: UnassignedTicket; //  FIXED
 }
 
 /* ================= CONTEXT TYPE ================= */
@@ -95,6 +134,8 @@ interface DashboardContextType {
   topResolver: TopResolver[];
   totalTickets: TotalTickets | null;
   topCategory: TopCategory[];
+  changeControl: ChangeControl[];
+  unassignedTicket: UnassignedTicket;
 
   loading: boolean;
   error: string | null;
@@ -110,14 +151,21 @@ const DashboardContext = createContext<DashboardContextType | undefined>(
 /* ================= PROVIDER ================= */
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
+  const requestController = useRef<AbortController | null>(null);
+  const hasLoadedDashboard = useRef(false);
   const [range, setRange] = useState<Range>("daily");
   const [chart, setChart] = useState<ChartPoint[]>([]);
-  const [ticketStatus, setTicketStatus] = useState<TicketStatusResponse | null>(
-    null,
-  );
-  const [averageStatus, setAverageStatus] = useState<AverageStatus | null>(
-    null,
-  );
+  const [ticketStatus, setTicketStatus] = useState<TicketStatusResponse | null>(null);
+  const [averageStatus, setAverageStatus] = useState<AverageStatus | null>(null);
+
+  //  FIXED: no null, safe default
+  const [unassignedTicket, setUnassignedTicket] = useState<UnassignedTicket>({
+    unassignedTicket: [],
+    openResult: [],
+    pendingResult: [],
+  });
+
+  const [changeControl, setChangeControl] = useState<ChangeControl[]>([]);
   const [topCategory, setTopCategory] = useState<TopCategory[]>([]);
   const [topRequester, setTopRequester] = useState<TopRequester[]>([]);
   const [topResolver, setTopResolver] = useState<TopResolver[]>([]);
@@ -125,16 +173,20 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  /* ------------ LOAD DASHBOARD ------------ */
+  const loadDashboard = useCallback(async (selectedRange: Range) => {
+    requestController.current?.abort();
+    const controller = new AbortController();
+    requestController.current = controller;
 
-  async function loadDashboard(selectedRange = range) {
-    setLoading(true);
+    if (!hasLoadedDashboard.current) setLoading(true);
     setError(null);
 
     try {
       const data = await fetchData<DashboardResponse>(
         `http://172.30.1.157:8050/api/dashboard?range=${selectedRange}`,
       );
+
+      if (controller.signal.aborted) return;
 
       setChart(data.chart);
       setTicketStatus(data.status);
@@ -143,31 +195,52 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setTopResolver(data.topResolver);
       setTotalTickets(data.totalTickets);
       setTopCategory(data.topCategory);
-    } catch {
-      setError("Failed to load dashboard data");
-    } finally {
-      setLoading(false);
-    }
-  }
+      setChangeControl(data.changeControl);
 
-  /* ------------ reload when range changes ------------ */
+      //  SAFE SET
+      setUnassignedTicket(
+        data.unassignedTicket ?? {
+          unassignedTicket: [],
+          openResult: [],
+          pendingResult: [],
+        }
+      );
+      hasLoadedDashboard.current = true;
+    } catch (requestError) {
+      if (requestError instanceof DOMException) {
+        if (requestError.name === "AbortError") return;
+        if (requestError.name === "TimeoutError") {
+          if (!hasLoadedDashboard.current) {
+            setError("Dashboard request timed out");
+          }
+          return;
+        }
+      }
+
+      if (!hasLoadedDashboard.current) {
+        setError("Failed to load dashboard data");
+      }
+    } finally {
+      if (requestController.current === controller) {
+        requestController.current = null;
+        setLoading(false);
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    loadDashboard(range);
-  }, [range]);
+    void loadDashboard(range);
 
-  /* ------------ auto refresh every 10s ------------ */
+    return () => requestController.current?.abort();
+  }, [range, loadDashboard]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      loadDashboard(range);
-      console.log("Dashboard Reloading");
+      void loadDashboard(range);
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [range]);
-
-  /* ------------ context value ------------ */
+  }, [range, loadDashboard]);
 
   return (
     <DashboardContext.Provider
@@ -181,6 +254,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         topResolver,
         topCategory,
         totalTickets,
+        changeControl,
+        unassignedTicket,
         loading,
         error,
         refreshDashboard: () => loadDashboard(range),

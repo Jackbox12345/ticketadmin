@@ -1,21 +1,21 @@
 import { useDashboard } from "../../../context/DashboardContext";
 import { chartRanges } from "../../../misc/types";
 
-
 export default function ChartHeader() {
   const { range, setRange } = useDashboard();
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex gap-2">
+    <div className="flex items-center gap-3">
+      <div className="flex flex-wrap justify-center gap-2">
         {chartRanges.map((option) => (
           <button
             key={option}
             onClick={() => setRange(option)}
-            className={`px-2 py-[2px] text-[11px] leading-none rounded-md transition-all ${
+            aria-pressed={range === option}
+            className={`px-4 py-1.5 text-xl font-medium rounded-lg border transition-all duration-150 ${
               range === option
-                ? "bg-[var(--bg-card)] text-white ring-2 ring-[var(--primary)]"
-                : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-white hover:ring-1 hover:ring-[var(--primary)]"
+                ? "text-[#3BBFF5] border-[#3BBFF5] bg-[#3BBFF5]/10"
+                : "text-gray-400 border-transparent hover:text-white hover:bg-white/5"
             }`}
           >
             {option.charAt(0).toUpperCase() + option.slice(1)}

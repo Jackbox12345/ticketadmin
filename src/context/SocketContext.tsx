@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { connectSocket } from "../services/socket";
+import { connectSocket, disconnectSocket } from "../services/socket";
 
 interface TopScorer {
   name: string;
@@ -21,10 +21,19 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     connectSocket((data) => {
       console.log("🔥 GLOBAL WS:", data);
 
-      if (data.type === "top_scorers") {
-        setTopScorers(data.data);
+      if (
+        typeof data === "object" &&
+        data !== null &&
+        "type" in data &&
+        data.type === "top_scorers" &&
+        "data" in data &&
+        Array.isArray(data.data)
+      ) {
+        setTopScorers(data.data as TopScorer[]);
       }
     });
+
+    return () => disconnectSocket();
   }, []);
 
   return (
