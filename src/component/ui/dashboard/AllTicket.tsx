@@ -6,11 +6,24 @@ const AllTicket = () => {
   const { unassignedTicket, loading } = useDashboard();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const getMedal = (index: number) => {
-    if (index === 0) return "👑";
-    if (index === 1) return "🥈";
-    if (index === 2) return "🥉";
-    return `${index + 1}.`;
+  const combined = useMemo(() => {
+    if (!unassignedTicket) return [];
+
+    return [
+      ...(unassignedTicket.unassignedTicket ?? []),
+      ...(unassignedTicket.openResult ?? []),
+      ...(unassignedTicket.pendingResult ?? []),
+    ].sort(
+      (a, b) =>
+        new Date(b.insert_time).getTime() -
+        new Date(a.insert_time).getTime()
+    );
+  }, [unassignedTicket]);
+
+  const statusTitle: Record<number, string> = {
+    1: "New",
+    2: "Open",
+    5: "Pending",
   };
 
   //  AUTO SLIDE
